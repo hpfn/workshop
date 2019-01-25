@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section>
+    <div>
+        <h1>Formulário de Inscrição</h1>
+        <div>
+            <form action="." novalidate method="post">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                <div>
+                    <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+                    {{ form.email.errors }}
+                    {{ form.email }}
+                </div>
+                <p><input type="submit" value="Enviar!"/></p>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock content %}

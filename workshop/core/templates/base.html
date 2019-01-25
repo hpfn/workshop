@@ -1,0 +1,15 @@
+{% load static from staticfiles %}
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE|default:'en' }}">
+	<head>
+        <title>{% block title %}LP Workshop!{% endblock title %}</title>
+        <meta charset="UTF-8">
+    </head>
+
+	<body>
+        {% block content %}
+        {% endblock content %}
+    </body>
+</html>
