@@ -1,4 +1,4 @@
-# import hashlib
+import hashlib
 
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
@@ -43,11 +43,9 @@ def export_to_mailchimp(email):
 
     client = MailChimp(mc_user=u_login, mc_api=k_api)
     client.lists.members.create(m_l_id, databody_item)
-    # does not update tags
-    # email = email.lower().encode(encoding='utf-8')
-    # hash = hashlib.md5(email).hexdigest()
-    # client.lists.members.update(m_l_id, subscriber_hash=hash, data=databody_item)
-    # client.lists.segments.update(m_l_id, segment_id=2097, data=databody_item)
+    # does update tags now
+    # 'update_members', not just 'update'
+    # client.lists.segments.update_members(m_l_id, segment_id=2097, data={'name': 'par', 'members_to_remove': [email]})
 
 
 def success(request):
