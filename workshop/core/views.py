@@ -5,6 +5,8 @@ from django.shortcuts import render
 from django.shortcuts import resolve_url as r
 from mailchimp3 import MailChimp
 
+from decouple import config
+
 
 from workshop.core.forms import SubscriptionForm
 
@@ -30,15 +32,15 @@ def create(request):
     # esboço copiado e colado
     if export_to_mailchimp(form.cleaned_data['email']) == 'Already':
         messages.error(request, "E-mail cadastrado anteriormente!")
-        return HttpResponseRedirect('/')
+        return render(request, 'core/index.html', {'form': form})
 
     return HttpResponseRedirect(r('core:success'))
 
 
 def export_to_mailchimp(email):
-    u_login = ''
-    k_api = ''
-    m_l_id = ''
+    u_login = config('MAILCHIMP_USER_LOGIN')
+    k_api = config('MAILCHIMP_API_KEY')
+    m_l_id = config('MAILCHIMP_L_ID')
 
     databody_item = {
         'email_address': email,
