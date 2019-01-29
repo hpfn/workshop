@@ -1,9 +1,10 @@
 import hashlib
-
+from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.shortcuts import resolve_url as r
 from mailchimp3 import MailChimp
+
 
 from workshop.core.forms import SubscriptionForm
 
@@ -26,15 +27,18 @@ def create(request):
     if not form.is_valid():
         return render(request, 'core/index.html', {'form': form})
 
-    export_to_mailchimp(form.cleaned_data['email'])
+    # esboço copiado e colado
+    if export_to_mailchimp(form.cleaned_data['email']) == 'Already':
+        messages.error(request, "E-mail cadastrado anteriormente!")
+        return HttpResponseRedirect('/')
 
     return HttpResponseRedirect(r('core:success'))
 
 
 def export_to_mailchimp(email):
-    u_login =
-    k_api =
-    m_l_id =
+    u_login = ''
+    k_api = ''
+    m_l_id = ''
 
     databody_item = {
         'email_address': email,
@@ -42,7 +46,13 @@ def export_to_mailchimp(email):
     }
 
     client = MailChimp(mc_user=u_login, mc_api=k_api)
-    client.lists.members.create(m_l_id, databody_item)
+    try:
+        client.lists.members.create(m_l_id, databody_item)
+    except:  # MailChimpError: # esboço
+        return "Already"
+
+
+
     # does update tags now
     # 'update_members', not just 'update'
     # client.lists.segments.update_members(m_l_id, segment_id=2097, data={'name': 'par', 'members_to_remove': [email]})
