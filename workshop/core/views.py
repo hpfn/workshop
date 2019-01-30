@@ -30,7 +30,7 @@ def create(request):
         return render(request, 'core/index.html', {'form': form})
 
     # esboço copiado e colado
-    if export_to_mailchimp(form.cleaned_data['email']) == 'Already':
+    if not export_to_mailchimp(form.cleaned_data['email']):  # == 'Already':
         messages.error(request, "E-mail cadastrado anteriormente!")
         return render(request, 'core/index.html', {'form': form})
 
@@ -50,20 +50,25 @@ def export_to_mailchimp(email):
     client = MailChimp(mc_user=u_login, mc_api=k_api)
     try:
         client.lists.members.create(m_l_id, databody_item)
+        return True
     except:  # MailChimpError: # esboço
-        return "Already"
-
-
-
-    # does update tags now
-    # 'update_members', not just 'update'
-    # client.lists.segments.update_members(m_l_id, segment_id=2097, data={'name': 'par', 'members_to_remove': [email]})
-
+        return False  # "Already"
 
 def success(request):
     return render(request, 'core/success.html', {})
+
 
 # GET all members
 # client = MailChimp(mc_user=u_login, mc_api=k_api)
 # dict_members = client.lists.members.all(m_l_id, get_all=True, fields="members.id,members.email_address,members.timestamp_opt")
 # del dict_members['total_items']
+
+# GET segments id and name
+# client = MailChimp(mc_user=u_login, mc_api=k_api)
+# dict_segments = client.lists.segments.all(m_l_id, get_all=False, fields="segments.id,segments.name")
+# for i in dict_segments['segments']:
+#    print(i)
+
+# does update tags now
+# 'update_members', not just 'update'
+# client.lists.segments.update_members(m_l_id, segment_id=2097, data={'name': 'par', 'members_to_remove': [email]})
